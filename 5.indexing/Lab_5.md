@@ -170,7 +170,8 @@ Describe your findings of this Lab 5 from the recorded outputs, is everything wo
 ```
 SQLite version: 3.34.1 2021-01-20 14:10:07 10e20c0b43500cfb9bbc0eaa061c57514f715d87238f4d835880cd846b9ebd1f
 Findings:
-It was not possible to find the correct run time using the EXPLAIN QUERY PLAN, instead I turned on .eqp and .timer and ran the normal commands without the EXPLAIN QUERY PLAN.
+It was not possible to find the correct run time using the EXPLAIN QUERY PLAN, 
+instead I turned on .eqp and .timer and ran the normal commands without the EXPLAIN QUERY PLAN.
 ```
 
 ps. Use this command to check your SQLite version. `sqlite3 --version`
