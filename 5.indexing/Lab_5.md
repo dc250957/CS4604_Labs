@@ -58,7 +58,10 @@ sqlite> EXPLAIN QUERY PLAN SELECT count(*) FROM big_cards;
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SCAN TABLE big_cards
+2886656
+Run Time: real 3.423 user 0.437500 sys 2.796875
 ```
 
 #### Using Indexes to improve performance
@@ -74,7 +77,9 @@ You suspect an index will help, but before you make any changes you want to get 
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SCAN TABLE big_cards
+Run Time: real 7.800 user 1.171875 sys 3.250000
 ```
 
 You suspect that an index on the race column will help. Let's create it.
@@ -86,7 +91,9 @@ You suspect that an index on the race column will help. Let's create it.
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SEARCH TABLE big_cards USING INDEX IDX1_big_cards (race=?)
+Run Time: real 2.372 user 0.156250 sys 0.546875
 ```
 
 Would it be possible to satisfy the query with an index only and further speed up the query?
@@ -98,7 +105,9 @@ Would it be possible to satisfy the query with an index only and further speed u
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SEARCH TABLE big_cards USING COVERING INDEX IDX2_big_cards (race=?)
+Run Time: real 1.901 user 0.125000 sys 0.390625
 ```
 
 If you issue command `VACUUM big_cards;` and re-analyze you will likely see an explain plan that *is* satisfied by the index (and consequently much faster). However, subsequent updates to the table would cause this query to go back to the table to check the visibility map.
@@ -110,7 +119,9 @@ If you issue command `VACUUM big_cards;` and re-analyze you will likely see an e
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SEARCH TABLE big_cards USING COVERING INDEX IDX2_big_cards (race=?)
+Run Time: real 1.820 user 0.093750 sys 0.390625
 ```
 
 #### The performance cost of Indexes 
@@ -126,7 +137,9 @@ Note the Execution time.
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SCAN TABLE big_cards
+Run Time: real 289.064 user 60.953125 sys 223.062500
 ```
 
 
@@ -141,22 +154,23 @@ Now let's drop the indexes and try again:
 Record output below:
 
 ```
-
+QUERY PLAN
+`--SCAN TABLE big_cards
+Run Time: real 56.604 user 5.765625 sys 39.656250
 ```
 
 Does the update took less time without the indexes? 
 Your answer:
 ```
-
+Yes the update took significantly less time without the indexes. Around 1/5 of the time it took with the indexes.
 ```
 
 Describe your findings of this Lab 5 from the recorded outputs, is everything working fine? or is anything not working? etc. Please indicate your SQLite version:
 
 ```
-SQLite version: 
+SQLite version: 3.34.1 2021-01-20 14:10:07 10e20c0b43500cfb9bbc0eaa061c57514f715d87238f4d835880cd846b9ebd1f
 Findings:
-
-
+It was not possible to find the correct run time using the EXPLAIN QUERY PLAN, instead I turned on .eqp and .timer and ran the normal commands without the EXPLAIN QUERY PLAN.
 ```
 
 ps. Use this command to check your SQLite version. `sqlite3 --version`
